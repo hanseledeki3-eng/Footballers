@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lionel Messi - Interactive Trophy Cabinet</title>
+    <style>
+        :root {
+            --bg-dark: #0a0e17;
+            --card-bg: #161f30;
+            --accent-gold: #d4af37;
+            --text-main: #ffffff;
+            --text-muted: #8a99ad;
+            --border-color: #243249;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        header h1 {
+            color: var(--accent-gold);
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        header p {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+        }
+
+        .filter-container {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            background-color: var(--card-bg);
+            color: var(--text-main);
+            border: 1px solid var(--border-color);
+            padding: 10px 20px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+        }
+
+        .filter-btn.active, .filter-btn:hover {
+            background-color: var(--accent-gold);
+            color: var(--bg-dark);
+            border-color: var(--accent-gold);
+        }
+
+        .cabinet-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 25px;
+        }
+
+        .trophy-card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 25px;
+            text-align: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .trophy-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(212, 175, 55, 0.1);
+            border-color: var(--accent-gold);
+        }
+
+        .trophy-icon {
+            font-size: 3.5rem;
+            margin-bottom: 15px;
+            display: inline-block;
+        }
+
+        .trophy-count {
+            background-color: var(--accent-gold);
+            color: var(--bg-dark);
+            font-weight: bold;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 0.9rem;
+            position: absolute;
+            top: 15px;
+            right: 15px;
+        }
+
+        .trophy-title {
+            font-size: 1.3rem;
+            margin-bottom: 10px;
+            color: var(--text-main);
+        }
+
+        .trophy-team {
+            font-size: 0.9rem;
+            color: var(--accent-gold);
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .trophy-years {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            line-height: 1.4;
+            border-top: 1px solid var(--border-color);
+            padding-top: 12px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <h1>Lionel Messi's Trophy Cabinet</h1>
+            <p>Interactive Showcase of Football's Ultimate Resume</p>
+        </header>
+
+        <div class="filter-container">
+            <button class="filter-btn active" onclick="filterCabinet('all')">All Hardware</button>
+            <button class="filter-btn" onclick="filterCabinet('argentina')">🇦🇷 Argentina</button>
+            <button class="filter-btn" onclick="filterCabinet('barcelona')">🇪🇸 Barcelona</button>
+            <button class="filter-btn" onclick="filterCabinet('psg')">🇫🇷 PSG</button>
+            <button class="filter-btn" onclick="filterCabinet('miami')">🇺🇸 Inter Miami</button>
+            <button class="filter-btn" onclick="filterCabinet('individual')">👑 Individual</button>
+        </div>
+
+        <div class="cabinet-grid" id="cabinetGrid">
+            <!-- Cards are dynamically rendered by JavaScript -->
+        </div>
+    </div>
+
+    <script>
+        const trophies = [
+            // Argentina
+            { title: "FIFA World Cup", team: "Argentina", category: "argentina", count: 1, icon: "🏆", years: "2022" },
+            { title: "Copa América", team: "Argentina", category: "argentina", count: 2, icon: "🥇", years: "2021, 2024" },
+            { title: "CONMEBOL-UEFA Finalissima", team: "Argentina", category: "argentina", count: 1, icon: "⚔️", years: "2022" },
+            { title: "Olympic Gold Medal", team: "Argentina", category: "argentina", count: 1, icon: "🏅", years: "2008" },
+            { title: "FIFA U-20 World Cup", team: "Argentina", category: "argentina", count: 1, icon: "🌍", years: "2005" },
+            
+            // Barcelona
+            { title: "UEFA Champions League", team: "FC Barcelona", category: "barcelona", count: 4, icon: "⭐", years: "2006, 2009, 2011, 2015" },
+            { title: "La Liga", team: "FC Barcelona", category: "barcelona", count: 10, icon: "🛡️", years: "2005, 2006, 2009, 2010, 2011, 2013, 2015, 2016, 2018, 2019" },
+            { title: "Copa del Rey", team: "FC Barcelona", category: "barcelona", count: 7, icon: "👑", years: "2009, 2012, 2015, 2016, 2017, 2018, 2021" },
+            { title: "Supercopa de España", team: "FC Barcelona", category: "barcelona", count: 8, icon: "⚡", years: "2005, 2006, 2009, 2010, 2011, 2013, 2016, 2018" },
+            { title: "UEFA Super Cup", team: "FC Barcelona", category: "barcelona", count: 3, icon: "🔱", years: "2009, 2011, 2015" },
+            { title: "FIFA Club World Cup", team: "FC Barcelona", category: "barcelona", count: 3, icon: "🔮", years: "2009, 2011, 2015" },
+            
+            // PSG
+            { title: "Ligue 1", team: "Paris Saint-Germain", category: "psg", count: 2, icon: "⚱️", years: "2022, 2023" },
+            { title: "Trophée des Champions", team: "Paris Saint-Germain", category: "psg", count: 1, icon: "🔥", years: "2022" },
+            
+            // Inter Miami
+            { title: "Leagues Cup", team: "Inter Miami CF", category: "miami", count: 1, icon: "☀️", years: "2023" },
+            { title: "MLS Supporters' Shield", team: "Inter Miami CF", category: "miami", count: 1, icon: "🛡️", years: "2024" },
+            { title: "MLS Cup", team: "Inter Miami CF", category: "miami", count: 1, icon: "🇺🇸", years: "2025" },
+            { title: "Campeones Cup", team: "Inter Miami CF", category: "miami", count: 1, icon: "🦅", years: "2026" },
+
+            // Individual
+            { title: "European Golden Shoe", team: "Individual Honor", category: "individual", count: 6, icon: "👟", years: "2010, 2012, 2013, 2017, 2018, 2019" },
+            { title: "Ballon d'Or", team: "Individual Honor", category: "individual", count: 8, icon: "🏅", years: "2009, 2010, 2011, 2012, 2015, 2019, 2021, 2023" }
+        ];
+
+        function displayTrophies(items) {
+            const grid = document.getElementById('cabinetGrid');
+            grid.innerHTML = '';
+            
+            items.forEach(trophy => {
+                const card = document.createElement('div');
+                card.className = 'trophy-card';
+                card.innerHTML = `
+                    <span class="trophy-count">x${trophy.count}</span>
+                    <span class="trophy-icon">${trophy.icon}</span>
+                    <h3 class="trophy-title">${trophy.title}</h3>
+                    <div class="trophy-team">${trophy.team}</div>
+                    <div class="trophy-years"><strong>Years:</strong> ${trophy.years}</div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        function filterCabinet(category) {
+            // Update active button state
+            const buttons = document.querySelectorAll('.filter-btn');
+            buttons.forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+
+            // Filter logic
+            if (category === 'all') {
+                displayTrophies(trophies);
+            } else {
+                const filtered = trophies.filter(t => t.category === category);
+                displayTrophies(filtered);
+            }
+        }
+
+        // Initial render
+        displayTrophies(trophies);
+    </script>
+</body>
+</html>
